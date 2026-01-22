@@ -1,3 +1,4 @@
+
 # **Afeke SOC + CTI Learning Lab**
 
 A hands‑on **Security Operations Center (SOC)** and **Cyber Threat Intelligence (CTI)** learning environment built with the **Elastic Stack**, **Linux endpoint telemetry**, **CTI enrichment pipelines**, **detection engineering**, and **guided threat‑hunting workflows**.  
@@ -5,7 +6,7 @@ This lab is designed as both a **professional portfolio project** and a **struct
 
 ---
 
-## 🌐 **Overview**
+## 🌐 Overview
 
 This repository documents the architecture, configuration, and workflows of a complete SOC + CTI lab built from scratch.  
 It demonstrates how modern security teams:
@@ -20,79 +21,95 @@ Everything is built using **open‑source tools**, **Linux endpoints**, and the 
 
 ---
 
-## 🏗️ **Lab Architecture**
+## 🧭 How to Navigate This Repository
 
-The lab consists of three core components:
+All documentation lives in the `docs/` directory and is organized as a **guided learning path**.  
+If you're new to the lab, begin with:
 
-- **Elastic Stack VM**  
-  - Elasticsearch  
-  - Kibana  
-  - Fleet Server  
-  - Logstash (CTI pipelines)
+➡️ **`docs/START_HERE.md`**
 
-- **Linux Endpoint 1 (Victim)**  
-  - Elastic Agent  
-  - Sysmon‑for‑Linux  
-  - Auditd telemetry
-
-- **Linux Endpoint 2 (Attacker)**  
-  - Attack simulation tools  
-  - Red‑team frameworks  
-  - Custom scripts  
-  - *Telemetry from this endpoint will also be forwarded to Elastic for detection engineering and hunting.*
-
-Architecture and data‑flow diagrams are available in:
-
-```
-docs/architecture/
-```
+This file explains the learning journey, prerequisites, and how to follow the documentation step‑by‑step.
 
 ---
 
-## 🔍 **Key Features**
+## 📚 Documentation Structure
 
-- **Elastic SIEM Dashboards**  
-  Host, network, process, and alert visibility.
-
-- **Threat Intelligence Integration**  
-  External CTI feeds ingested via Logstash.
-
-- **CTI Enrichment Pipelines**  
-  Indicators mapped to ECS and applied to endpoint events.
-
-- **Detection Engineering**  
-  Custom rules built and tested against real attack data.
-
-- **Threat Hunting Workflows**  
-  Guided KQL queries and playbooks for proactive analysis.
-
-- **Attack Simulation**  
-  Realistic adversary behavior generated from the attacker VM.
-
----
-
-## 📚 **Documentation**
-
-All detailed guides, walkthroughs, and configurations live in the `docs/` directory:
+The documentation is intentionally structured to be **beginner‑friendly**, **modular**, and **easy to follow**.
 
 ```
 docs/
 │
-├── architecture/        # Diagrams and high-level design
-├── elastic-stack/       # Elasticsearch, Kibana, Fleet, Logstash setup
-├── endpoints/           # Linux endpoint configuration
-├── cti/                 # Threat intel ingestion, enrichment, rules
-├── hunting/             # Queries and hunting playbooks
-└── troubleshooting/     # Common issues and fixes
+├── START_HERE.md               # Entry point for beginners
+│
+├── 00_overview/                # High-level explanations and architecture
+│
+├── 10_pki/                     # Root CA, Intermediate CA, service certificates
+│
+├── 20_elasticsearch/           # Elasticsearch installation + TLS
+│
+├── 30_kibana/                  # Kibana installation + TLS
+│
+├── 40_fleet_server/            # Fleet Server installation + TLS
+│
+├── 50_elastic_agent/           # Endpoint agent installation + TLS
+│
+├── 60_logstash/                # Logstash + CTI ingestion pipelines
+│
+├── 70_cti/                     # Threat intelligence workflows
+│
+├── 80_hunting/                 # Threat hunting playbooks and KQL queries
+│
+└── 99_appendix/                # Troubleshooting, templates, diagrams, glossary
 ```
 
-Each section is written to be **beginner‑friendly**, **step‑by‑step**, and **reproducible**.
+Each section builds on the previous one, forming a complete learning path from **PKI → Elastic Stack → Fleet → Endpoint Telemetry → CTI → Detection Engineering → Hunting**.
 
 ---
 
-## 🧠 **Learning Goals**
+## 🏗️ Lab Architecture
 
-This lab is designed to build practical skills in:
+The lab consists of three core components:
+
+### **Elastic Stack VM**
+- Elasticsearch  
+- Kibana  
+- Fleet Server  
+- Logstash (CTI pipelines)
+
+### **Linux Endpoint 1 (Victim)**
+- Elastic Agent  
+- Sysmon‑for‑Linux  
+- Auditd telemetry
+
+### **Linux Endpoint 2 (Attacker)**
+- Attack simulation tools  
+- Red‑team frameworks  
+- Custom scripts  
+- Telemetry forwarded to Elastic for detection engineering and hunting
+
+Architecture diagrams are available in:
+
+```
+docs/00_overview/architecture_diagram.md
+```
+
+---
+
+## 🔍 Key Features
+
+- **Elastic SIEM Dashboards**  
+- **Threat Intelligence Integration**  
+- **CTI Enrichment Pipelines**  
+- **Detection Engineering**  
+- **Threat Hunting Workflows**  
+- **Attack Simulation**  
+- **Linux Telemetry Collection**  
+
+---
+
+## 🧠 Learning Goals
+
+This lab builds practical skills in:
 
 - SOC analysis  
 - Threat intelligence research  
@@ -107,9 +124,7 @@ The environment is intentionally structured to support **incremental learning** 
 
 ---
 
-## 🗺️ **Roadmap**
-
-This lab is being developed in intentional phases to support incremental learning and realistic SOC + CTI workflows.
+## 🗺️ Roadmap
 
 ### **Phase 1 — Core Environment (In Progress)**
 - Elastic Stack VM (Elasticsearch, Kibana, Fleet Server)  
@@ -147,11 +162,9 @@ This lab is being developed in intentional phases to support incremental learnin
 
 ---
 
-## 🚀 **Future Enhancements**
+## 🚀 Future Enhancements
 
-Planned additions include:
-
-- Additional CTI feeds (MISP, MalwareBazaar, etc.)  
+- Additional CTI feeds  
 - More detection rules mapped to MITRE ATT&CK  
 - Automated attack simulations  
 - Dashboard templates  
@@ -159,17 +172,16 @@ Planned additions include:
 
 ---
 
-## 🧪 **Related Repository: Threat Intelligence Research Portfolio**
+## 🧪 Related Repository: Threat Intelligence Research Portfolio
 
 This lab focuses on building and operating the SOC + CTI environment.  
 All **investigations, case studies, phishing analyses, and CTI research reports** are maintained separately in:
 
-➡️ [(https://github.com/git-loa/threat-intel-research-portfolio](https://github.com/git-loa/threat-intel-research-portfolio)  
-A dedicated repository for real‑world threat intelligence investigations, including phishing campaigns, infrastructure analysis, timelines, and MITRE ATT&CK mappings.
+➡️ `https://github.com/git-loa/threat-intel-research-portfolio` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fgit-loa%2Fthreat-intel-research-portfolio")
 
 ---
 
-## 📄 **License**
+## 📄 License
 
 This project is licensed under the MIT License.  
 See the `LICENSE` file for details.
