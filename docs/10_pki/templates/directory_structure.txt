@@ -1,0 +1,53 @@
+/opt/pki/
+    root/
+        certs/
+        crl/
+        newcerts/
+        private/
+        root-ca.key
+        root-ca.crt
+        index.txt
+        serial
+        crlnumber
+        root-ca-openssl.cnf
+
+    intermediate/
+        certs/
+        crl/
+        newcerts/
+        private/
+        int-ca.key
+        int-ca.csr
+        int-ca.crt
+        index.txt
+        serial
+        crlnumber
+        int-ca-openssl.cnf
+
+    services/
+        elasticsearch/
+            es.key
+            es.csr
+            es.crt
+            es-san.cnf
+
+        kibana/
+            kibana.key
+            kibana.csr
+            kibana.crt
+            kibana-san.cnf
+
+        fleet_server/
+            fleet.key
+            fleet.csr
+            fleet.crt
+            fleet-san.cnf
+
+        logstash/
+            logstash.key
+            logstash.csr
+            logstash.crt
+            logstash-san.cnf
+
+    chains/
+        ca-chain.crt

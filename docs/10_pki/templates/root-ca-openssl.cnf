@@ -1,0 +1,51 @@
+# ============================
+# Root CA OpenSSL Configuration
+# ============================
+
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = .                                # Working directory: /opt/pki/root
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/certs
+database          = $dir/db/index.txt
+serial            = $dir/db/serial
+private_key       = $dir/private/root-ca.key         # Root CA private key
+certificate       = $dir/certs/root-ca.crt           # Root CA certificate
+default_md        = sha256
+default_days      = 3650                             # CHANGE OPTIONAL (Root CA lifetime)
+policy            = policy_strict
+
+[ policy_strict ]
+countryName             = supplied
+stateOrProvinceName     = supplied
+organizationName        = supplied
+commonName              = supplied
+
+[ req ]
+default_bits        = 4096
+default_md          = sha256
+prompt              = no
+distinguished_name  = dn
+x509_extensions     = v3_ca
+
+[ dn ]
+C  = CA              # CHANGE
+ST = Root-State      # CHANGE
+O  = Root-Org        # CHANGE
+CN = Root-CA         # CHANGE
+
+[ v3_ca ]
+basicConstraints = critical, CA:TRUE
+keyUsage         = critical, keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always
+
+# This block MUST be present because the Root CA signs the Intermediate CA
+[ v3_intermediate_ca ]
+basicConstraints = critical, CA:TRUE, pathlen:0
+keyUsage         = critical, keyCertSign, cRLSign
+authorityKeyIdentifier = keyid:always
+subjectKeyIdentifier   = hash

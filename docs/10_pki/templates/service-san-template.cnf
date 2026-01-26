@@ -1,0 +1,12 @@
+# ============================
+# Service SAN Template
+# ============================
+
+[ san ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = service-name       # CHANGE (Primary hostname)
+DNS.2 = localhost          # CHANGE OPTIONAL (Additional hostname)
+IP.1  = 127.0.0.1          # CHANGE OPTIONAL (Service IP)
+IP.2  = A.B.C.D            # CHANGE OPTIONAL (Service IP)
