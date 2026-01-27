@@ -177,7 +177,7 @@ The environment is intentionally structured to support **incremental learning** 
 This lab focuses on building and operating the SOC + CTI environment.  
 All **investigations, case studies, phishing analyses, and CTI research reports** are maintained separately in:
 
-➡️ `https://github.com/git-loa/threat-intel-research-portfolio` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fgit-loa%2Fthreat-intel-research-portfolio")
+➡️ [https://github.com/git-loa/threat-intel-research-portfolio] (https://github.com/git-loa/threat-intel-research-portfolio)
 
 ---
 
