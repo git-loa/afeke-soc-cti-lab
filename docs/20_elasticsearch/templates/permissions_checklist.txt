@@ -1,0 +1,31 @@
+# ==========================================
+# Elasticsearch TLS Permissions Checklist
+# ==========================================
+
+# -------------------------
+# Directory Permissions
+# -------------------------
+# The certs directory must be accessible only to the elasticsearch user and group.
+sudo chmod 750 /etc/elasticsearch/certs
+sudo chown -R elasticsearch:elasticsearch /etc/elasticsearch/certs
+
+# -------------------------
+# File Permissions
+# -------------------------
+# Private key: owner read-only
+sudo chmod 600 /etc/elasticsearch/certs/elasticsearch.key
+
+# Certificates: world-readable is acceptable
+sudo chmod 644 /etc/elasticsearch/certs/elasticsearch.crt
+sudo chmod 644 /etc/elasticsearch/certs/ca-chain.crt
+
+# -------------------------
+# Verification
+# -------------------------
+ls -l /etc/elasticsearch/certs
+
+# Expected:
+# - elasticsearch.key → -rw------- (600)
+# - elasticsearch.crt → -rw-r--r-- (644)
+# - ca-chain.crt      → -rw-r--r-- (644)
+# - certs directory   → drwxr-x--- (750)

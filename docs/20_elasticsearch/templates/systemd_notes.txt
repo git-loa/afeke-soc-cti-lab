@@ -1,0 +1,34 @@
+# ==========================================
+# Elasticsearch Systemd Notes (Template)
+# ==========================================
+
+# -------------------------
+# Reload systemd configuration
+# -------------------------
+sudo systemctl daemon-reload
+
+# -------------------------
+# Enable Elasticsearch on boot
+# -------------------------
+sudo systemctl enable elasticsearch
+
+# -------------------------
+# Start Elasticsearch
+# -------------------------
+sudo systemctl start elasticsearch
+
+# -------------------------
+# Check service status
+# -------------------------
+sudo systemctl status elasticsearch
+
+# -------------------------
+# View Elasticsearch logs
+# -------------------------
+sudo journalctl -u elasticsearch -f
+
+# -------------------------
+# Stop or restart Elasticsearch
+# -------------------------
+sudo systemctl stop elasticsearch
+sudo systemctl restart elasticsearch

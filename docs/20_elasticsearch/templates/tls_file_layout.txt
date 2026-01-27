@@ -1,0 +1,27 @@
+# ==========================================
+# TLS File Layout for Elasticsearch (Template)
+# ==========================================
+
+# -------------------------
+# Elasticsearch Runtime Paths
+# -------------------------
+/etc/elasticsearch/
+    elasticsearch.yml
+
+/etc/elasticsearch/certs/
+    elasticsearch.key
+    elasticsearch.crt
+    ca-chain.crt
+
+# -------------------------
+# PKI Workspace (Read-Only)
+# -------------------------
+/opt/pki/services/elasticsearch/private/elasticsearch.key
+/opt/pki/services/elasticsearch/certs/elasticsearch.crt
+/opt/pki/intermediate/certs/ca-chain.crt
+
+# Notes:
+# - /opt/pki is the CA workspace and must be preserved.
+# - Elasticsearch reads certificates ONLY from /etc/elasticsearch/certs/.
+# - The CA chain must include both Intermediate and Root CA certificates.
+# - The service key and certificate are service-specific.

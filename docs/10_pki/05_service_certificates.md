@@ -141,7 +141,7 @@ openssl genrsa -out private/<service>.key 4096
 openssl req -new \
   -key private/<service>.key \
   -out csr/<service>.csr \
-  -subj "/CN=<service>"
+  "/C=CA/ST=Ontario/L=Toronto/O=SOC Lab/OU=Elasticsearch/CN=elasticsearch"
 ```
 
 ---
@@ -158,9 +158,11 @@ openssl x509 -req \
   -days 825 \
   -sha256 \
   -extfile <service>-san.cnf
+  -extensions san
 ```
 
 This applies SANs during signing.
+> Note: -extensions san tells OpenSSL to use the [ san ] section in elasticsearch.cnf
 
 ---
 

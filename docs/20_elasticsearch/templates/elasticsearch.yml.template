@@ -1,0 +1,32 @@
+# ============================
+# Elasticsearch TLS Template
+# ============================
+
+# ----------------------------
+# Cluster and Node Information
+# ----------------------------
+cluster.name: <CLUSTER_NAME>
+node.name: <NODE_NAME>
+network.host: <BIND_ADDRESS>
+
+# ----------------------------
+# Security (Required in 8.x)
+# ----------------------------
+xpack.security.enabled: true
+
+# ----------------------------
+# HTTP Layer (HTTPS on 9200)
+# ----------------------------
+xpack.security.http.ssl.enabled: true
+xpack.security.http.ssl.key: certs/elasticsearch.key
+xpack.security.http.ssl.certificate: certs/elasticsearch.crt
+xpack.security.http.ssl.certificate_authorities: [ "certs/ca-chain.crt" ]
+
+# ----------------------------
+# Transport Layer (TLS on 9300)
+# ----------------------------
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.key: certs/elasticsearch.key
+xpack.security.transport.ssl.certificate: certs/elasticsearch.crt
+xpack.security.transport.ssl.certificate_authorities: [ "certs/ca-chain.crt" ]
