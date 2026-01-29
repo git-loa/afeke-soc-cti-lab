@@ -141,7 +141,7 @@ openssl genrsa -out private/<service>.key 4096
 openssl req -new \
   -key private/<service>.key \
   -out csr/<service>.csr \
-  "/C=CA/ST=Ontario/L=Toronto/O=SOC Lab/OU=Elasticsearch/CN=elasticsearch"
+  -subj "/C=CA/ST=Ontario/L=Toronto/O=SOC Lab/OU=Elasticsearch/CN=elasticsearch"
 ```
 
 ---
