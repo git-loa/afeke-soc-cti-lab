@@ -1,7 +1,7 @@
 
 # **Afeke SOC + CTI Learning Lab**
 
-A hands‑on **Security Operations Center (SOC)** and **Cyber Threat Intelligence (CTI)** learning environment built with the **Elastic Stack**, **Linux endpoint telemetry**, **CTI enrichment pipelines**, **detection engineering**, and **guided threat‑hunting workflows**.  
+A hands‑on **Security Operations Center (SOC)** and **Cyber Threat Intelligence (CTI)** learning environment built with the **Elastic Stack**, **Linux endpoint telemetry**, **CTI enrichment workflows**, **detection engineering**, and **guided threat‑hunting playbooks**.  
 This lab is designed as both a **professional portfolio project** and a **structured learning journey**.
 
 ---
@@ -12,7 +12,7 @@ This repository documents the architecture, configuration, and workflows of a co
 It demonstrates how modern security teams:
 
 - Collect and analyze endpoint telemetry  
-- Ingest and enrich threat intelligence  
+- Enrich and correlate threat intelligence  
 - Build and tune detection rules  
 - Perform threat hunting  
 - Simulate attacks for research and learning  
@@ -53,11 +53,9 @@ docs/
 │
 ├── 50_elastic_agent/           # Endpoint agent installation + TLS
 │
-├── 60_logstash/                # Logstash + CTI ingestion pipelines
+├── 60_cti/                     # Threat intelligence ingestion & enrichment
 │
-├── 70_cti/                     # Threat intelligence workflows
-│
-├── 80_hunting/                 # Threat hunting playbooks and KQL queries
+├── 70_hunting/                 # Threat hunting playbooks and KQL queries
 │
 └── 99_appendix/                # Troubleshooting, templates, diagrams, glossary
 ```
@@ -74,12 +72,14 @@ The lab consists of three core components:
 - Elasticsearch  
 - Kibana  
 - Fleet Server  
-- Logstash (CTI pipelines)
+- CTI ingestion & enrichment (via Elastic integrations and scripts)
 
 ### **Linux Endpoint 1 (Victim)**
 - Elastic Agent  
-- Sysmon‑for‑Linux  
-- Auditd telemetry
+- Elastic Defend (EDR)  
+- System logs  
+- Osquery Manager  
+- Auditd telemetry (optional)
 
 ### **Linux Endpoint 2 (Attacker)**
 - Attack simulation tools  
@@ -99,9 +99,9 @@ docs/00_overview/architecture_diagram.md
 
 - **Elastic SIEM Dashboards**  
 - **Threat Intelligence Integration**  
-- **CTI Enrichment Pipelines**  
+- **CTI Enrichment Workflows**  
 - **Detection Engineering**  
-- **Threat Hunting Workflows**  
+- **Threat Hunting Playbooks**  
 - **Attack Simulation**  
 - **Linux Telemetry Collection**  
 
@@ -128,8 +128,7 @@ The environment is intentionally structured to support **incremental learning** 
 
 ### **Phase 1 — Core Environment (In Progress)**
 - Elastic Stack VM (Elasticsearch, Kibana, Fleet Server)  
-- Logstash with CTI ingestion pipeline  
-- Linux Endpoint 1 (Victim) with Elastic Agent + Sysmon‑for‑Linux  
+- Linux Endpoint 1 (Victim) with Elastic Agent  
 - Documentation structure under `docs/`  
 - Initial README and architecture outline  
 
@@ -152,7 +151,7 @@ The environment is intentionally structured to support **incremental learning** 
 
 ### **Phase 5 — CTI Expansion**
 - Add additional CTI feeds (MISP, MalwareBazaar, Abuse.ch, etc.)  
-- Expand enrichment pipelines  
+- Expand enrichment workflows  
 - Build correlation dashboards  
 
 ### **Phase 6 — Case Studies & Investigations**
@@ -177,7 +176,7 @@ The environment is intentionally structured to support **incremental learning** 
 This lab focuses on building and operating the SOC + CTI environment.  
 All **investigations, case studies, phishing analyses, and CTI research reports** are maintained separately in:
 
-➡️ [https://github.com/git-loa/threat-intel-research-portfolio](https://github.com/git-loa/threat-intel-research-portfolio)
+➡️ `https://github.com/git-loa/threat-intel-research-portfolio` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fgit-loa%2Fthreat-intel-research-portfolio")
 
 ---
 
@@ -185,3 +184,4 @@ All **investigations, case studies, phishing analyses, and CTI research reports*
 
 This project is licensed under the MIT License.  
 See the `LICENSE` file for details.
+

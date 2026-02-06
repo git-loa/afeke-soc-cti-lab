@@ -55,7 +55,7 @@ Kibana requires strict permissions on private keys and controlled access to the 
 Apply file permissions:
 
 ```
-sudo chmod 600 /etc/kibana/certs/kibana.key
+sudo chmod 640 /etc/kibana/certs/kibana.key
 sudo chmod 644 /etc/kibana/certs/kibana.crt
 sudo chmod 644 /etc/kibana/certs/ca-chain.crt
 ```
@@ -69,7 +69,7 @@ sudo chmod 750 /etc/kibana/certs
 Set ownership:
 
 ```
-sudo chown -R kibana:kibana /etc/kibana/certs/
+sudo chown -R root:kibana /etc/kibana/certs
 ```
 
 Notes:

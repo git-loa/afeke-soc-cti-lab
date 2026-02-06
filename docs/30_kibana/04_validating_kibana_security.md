@@ -169,7 +169,7 @@ Symptoms:
 Fix:
 
 ```
-sudo chown -R kibana:kibana /etc/kibana/certs/
+sudo chown -R root:kibana /etc/kibana/certs/
 sudo chmod 600 /etc/kibana/certs/kibana.key
 ```
 

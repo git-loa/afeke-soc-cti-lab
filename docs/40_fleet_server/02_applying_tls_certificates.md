@@ -35,9 +35,9 @@ Copy the following files from your PKI output:
 Example:
 
 ```
-sudo cp /root/pki/output/fleet-server.crt /etc/fleet-server/certs/
-sudo cp /root/pki/output/fleet-server.key /etc/fleet-server/certs/
-sudo cp /root/pki/output/ca-chain.crt /etc/fleet-server/certs/
+sudo cp /opt/pki/intermediate/services/fleet/certs/fleet-server.crt /etc/fleet-server/certs/
+sudo cp /opt/pki/intermediate/services/fleet/private/fleet-server.key /etc/fleet-server/certs/
+sudo cp /otp/pki/intermediate/certs/ca-chain.crt /etc/fleet-server/certs/
 ```
 
 Adjust paths if your PKI output directory differs.

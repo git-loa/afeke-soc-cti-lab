@@ -2,11 +2,21 @@
 # Service SAN Template
 # ============================
 
+[ req ]
+prompt = no
+distinguished_name = dn
+req_extensions = san
+
+[ dn ]
+CN = service.local
+O  = SOC-CTI Lab            # CHANGE
+OU = Elasticsearch          # CHANGE
+
 [ san ]
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = service-name       # CHANGE (Primary hostname)
+DNS.1 = service.local      # CHANGE (Primary hostname)
 DNS.2 = localhost          # CHANGE OPTIONAL (Additional hostname)
 IP.1  = 127.0.0.1          # CHANGE OPTIONAL (Service IP)
 IP.2  = A.B.C.D            # CHANGE OPTIONAL (Service IP)

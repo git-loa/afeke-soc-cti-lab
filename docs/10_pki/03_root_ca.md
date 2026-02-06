@@ -71,11 +71,14 @@ Recommended structure:
     db/
 ```
 
+
 Initialize the CA database:
 
 ```
+chmod 700 /opt/pki/root/private # Only root can read, write and execute
 touch /opt/pki/root/db/index.txt
 echo 1000 > /opt/pki/root/db/serial
+echo 1000 > /opt/pki/root/db/crlnumber
 ```
 
 This matches industry CA layouts.
@@ -111,7 +114,8 @@ This template defines:
 ### **Step 1 — Generate the Root CA private key**
 
 ```
-openssl genrsa -out private/root-ca.key 4096
+openssl genrsa -aes256 -out private/root-ca.key 4096 
+chmod 600 private/root-ca.key # Only root can read and write
 ```
 
 ### **Step 2 — Generate the Root CA certificate**
@@ -119,7 +123,6 @@ openssl genrsa -out private/root-ca.key 4096
 ```
 openssl req -x509 \
   -new \
-  -nodes \
   -key private/root-ca.key \
   -sha256 \
   -days 3650 \

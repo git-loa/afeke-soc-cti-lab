@@ -3,98 +3,83 @@
 
 ## **Summary**
 Service certificates provide TLS encryption and identity verification for all Elastic Stack components.  
-This note explains **what service certificates are**, **why they are required**, and **how to create them** using the Intermediate CA and SAN templates.  
-Each service (Elasticsearch, Kibana, Fleet Server, Logstash) receives its own certificate and private key.
+Each service (Elasticsearch, Kibana, Fleet Server, Logstash) receives:
+
+- a private key  
+- a CSR generated from a service‑specific `.csr.cnf` file  
+- a certificate signed by the Intermediate CA  
+- a certificate chain  
+
+All service certificates are issued by the **Intermediate CA**, not the Root CA.
 
 ---
 
-# **1. What Are Service Certificates?**
-
+# **1. What Service Certificates Are**
 Service certificates are X.509 certificates issued to individual Elastic components.  
 They provide:
 
 - **authentication** — the service proves its identity  
 - **encryption** — TLS protects data in transit  
-- **trust** — the certificate chains back to the Intermediate CA and Root CA  
+- **trust** — the certificate chains to the Intermediate and Root CAs  
 
-Each service gets:
-
-- a private key  
-- a CSR  
-- a signed certificate  
-- a SAN file defining hostnames/IPs  
-- a CA chain  
+Each service has its own keypair and certificate.
 
 ---
 
-# **2. Why Do We Need Service Certificates?**
+# **2. Why They Are Required**
+TLS is required for:
 
-Elastic Stack requires TLS for:
-
-- node‑to‑node communication  
+- Elasticsearch node‑to‑node transport  
 - Kibana ↔ Elasticsearch  
 - Fleet Server ↔ Elasticsearch  
-- Logstash ↔ Elasticsearch  
 - Elastic Agents ↔ Fleet Server  
+- Logstash ↔ Elasticsearch  
 
-Without service certificates:
-
-- nodes cannot join the cluster  
-- Kibana cannot connect  
-- Fleet Server cannot enroll agents  
-- Logstash pipelines will fail  
-- TLS connections will be rejected  
-
-Service certificates are mandatory for a secure Elastic deployment.
+Without valid certificates, components cannot connect securely.
 
 ---
 
-# **3. When Do We Create Service Certificates?**
+# **3. When They Are Created**
+Create service certificates **after**:
 
-Service certificates are created **after**:
+- Root CA  
+- Intermediate CA  
+- CA chain  
 
-- the Root CA  
-- the Intermediate CA  
-- the CA chain  
+Create them **before** configuring:
 
-They are created **before**:
-
-- configuring Elasticsearch  
-- configuring Kibana  
-- configuring Fleet Server  
-- configuring Logstash  
+- Elasticsearch  
+- Kibana  
+- Fleet Server    
 
 ---
 
-# **4. Directory Structure (VM)**
+# **4. Directory Structure**
 
-Service certificates are stored under:
-
-```
-/opt/pki/services/
-```
-
-Each service has its own directory:
+Service certificates live under:
 
 ```
-/opt/pki/services/
-    elasticsearch/
-    kibana/
-    fleet_server/
-    logstash/
+/opt/pki/intermediate/services/
 ```
 
-Each directory contains:
+Each service has:
 
 ```
-private/
-csr/
-certs/
+<service>/
+    private/
+    csr/
+    certs/
+```
+
+Secure the private key directory:
+
+```
+chmod 700 private/
 ```
 
 ---
 
-# **5. Template References**
+# **5. SAN Template References**
 
 SAN templates are stored under:
 
@@ -102,28 +87,26 @@ SAN templates are stored under:
 docs/10_pki/templates/
 ```
 
-Templates include:
+Examples:
 
-- `es-san.cnf`  
-- `kibana-san.cnf`  
-- `fleet-san.cnf`  
-- `logstash-san.cnf`  
+- `es-san.cnf`
+- `kibana-san.cnf`
+- `fleet-san.cnf`
+- `logstash-san.cnf`
 
-Copy the appropriate template into each service directory.
+Each service copies its template into its directory.
 
 ---
 
 # **6. Creating Service Certificates**
 
-The process is identical for each service:
+The workflow is identical for all services:
 
 1. Generate private key  
-2. Generate CSR  
-3. Sign certificate using Intermediate CA  
+2. Generate CSR using `<service>.csr.cnf`  
+3. Sign using the Intermediate CA (`openssl ca`)  
 4. Verify certificate  
 5. Verify chain  
-
-Below is the generic workflow.
 
 ---
 
@@ -131,38 +114,70 @@ Below is the generic workflow.
 
 ```
 openssl genrsa -out private/<service>.key 4096
+chmod 600 private/<service>.key
 ```
 
 ---
 
-## **Step 2 — Generate the CSR**
+## **Step 2 — Generate the CSR (using <service>.csr.cnf)**
+
+Each service has a CSR config file.  
+Example for Elasticsearch:
+
+`elasticsearch.csr.cnf`:
+
+```ini
+[ req ]
+prompt = no
+distinguished_name = dn
+req_extensions = san
+
+[ dn ]
+CN = elasticsearch.local
+O  = SOC Lab
+
+
+[ san ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = elasticsearch.local
+DNS.2 = localhost
+```
+
+Generate the CSR:
 
 ```
-openssl req -new \
-  -key private/<service>.key \
-  -out csr/<service>.csr \
-  -subj "/C=CA/ST=Ontario/L=Toronto/O=SOC Lab/OU=Elasticsearch/CN=elasticsearch"
+openssl req -new -sha256 \
+  -key private/elasticsearch.key \
+  -config elasticsearch.csr.cnf \
+  -out csr/elasticsearch.csr
 ```
+
+This file defines the subject and SANs for the service.
 
 ---
 
-## **Step 3 — Sign the certificate using the Intermediate CA**
+## **Step 3 — Sign the certificate (Intermediate CA)**
+
+From `/opt/pki/intermediate`:
 
 ```
-openssl x509 -req \
-  -in csr/<service>.csr \
-  -CA /opt/pki/intermediate/certs/int-ca.crt \
-  -CAkey /opt/pki/intermediate/private/int-ca.key \
-  -CAcreateserial \
-  -out certs/<service>.crt \
+openssl ca -config openssl.cnf \
+  -extensions v3_service_cert \
   -days 825 \
-  -sha256 \
-  -extfile <service>-san.cnf
-  -extensions san
+  -notext \
+  -md sha256 \
+  -in services/<service>/csr/<service>.csr \
+  -out services/<service>/certs/<service>.crt
 ```
 
-This applies SANs during signing.
-> Note: -extensions san tells OpenSSL to use the [ san ] section in elasticsearch.cnf
+This:
+
+- updates the CA database  
+- increments serial numbers  
+- applies `[ v3_service_cert ]`  
+- applies SANs  
 
 ---
 
@@ -171,13 +186,6 @@ This applies SANs during signing.
 ```
 openssl x509 -in certs/<service>.crt -text -noout
 ```
-
-Check:
-
-- SANs  
-- key usage  
-- issuer  
-- validity  
 
 ---
 
@@ -189,8 +197,6 @@ openssl verify \
   certs/<service>.crt
 ```
 
-Elastic Stack requires a valid chain.
-
 ---
 
 # **7. Service‑Specific Notes**
@@ -199,26 +205,22 @@ Elastic Stack requires a valid chain.
 Requires:
 
 - node certificate  
-- transport layer TLS  
-- HTTP layer TLS  
+- transport TLS  
+- HTTP TLS  
 
-SANs must include:
-
-- hostname  
-- IP address  
-- localhost  
+SANs must include hostname and localhost.
 
 ### **Kibana**
 Requires:
 
-- certificate for HTTPS  
+- HTTPS certificate  
 - trust of Elasticsearch CA chain  
 
 ### **Fleet Server**
 Requires:
 
-- certificate for HTTPS  
-- certificate for agent enrollment  
+- HTTPS certificate  
+- enrollment certificate  
 - SANs must include Fleet hostname  
 
 ### **Logstash**
@@ -229,33 +231,35 @@ Requires:
 
 ---
 
-# **8. What We Do NOT Do With Service Certificates**
-
-To keep the workflow clean:
+# **8. What We Do NOT Do**
 
 - no SANs inside CSRs  
 - no encrypted private keys  
-- no `.ext` files  
 - no wildcard certificates  
-- no shared certificates between services  
+- no shared certificates  
 - no direct signing by the Root CA  
 
-Each service gets its own certificate.
+Each service receives its own certificate signed by the Intermediate CA.
 
 ---
 
-# **9. Learning Notes & Study Material**
+# **9. Learning Notes**
 
-- Service certificates provide TLS and identity for each Elastic component.  
-- All service certificates are signed by the Intermediate CA, not the Root CA.  
-- SANs are applied during signing using the SAN templates.  
-- Each service has its own directory under `/opt/pki/services/`.  
-- The workflow is identical for all services: key → CSR → SAN → signed certificate → verification.  
-- The CA chain (`Intermediate → Root`) must be included for Elastic to trust the certificate.  
-- Service certificates must be created before configuring any Elastic component.  
-- Keeping each service certificate isolated prevents configuration drift and improves clarity.  
-- The SAN templates ensure consistency and prevent mistakes.  
-- This step completes the PKI materials required for Elastic Stack TLS.
+- All service certificates are signed by the Intermediate CA.  
+- SANs are defined in `<service>.csr.cnf`.  
+- Workflow is identical across services.  
+- The CA chain must be deployed with each service.  
+- Certificates must exist before configuring Elastic components.  
+
+---
+
+# **10. References**
+
+- OpenSSL Man Pages — req, x509, ca  
+- OpenSSL PKI Tutorial (OpenSSL Wiki)  
+- RFC 5280 — X.509 Certificate and CRL Profile  
+- Elastic TLS Configuration Guide  
+- Elastic Security Settings Overview  
 
 ---
 

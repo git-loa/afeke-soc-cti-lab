@@ -36,8 +36,8 @@ Source directory:
 Copy the required files:
 
 ```
-sudo cp /opt/pki/services/elasticsearch/private/elasticsearch.key /etc/elasticsearch/certs/
-sudo cp /opt/pki/services/elasticsearch/certs/elasticsearch.crt /etc/elasticsearch/certs/
+sudo cp /opt/pki/intermediate/services/elasticsearch/private/elasticsearch.key /etc/elasticsearch/certs/
+sudo cp /opt/pki/intermediate/services/elasticsearch/certs/elasticsearch.crt /etc/elasticsearch/certs/
 sudo cp /opt/pki/intermediate/certs/ca-chain.crt /etc/elasticsearch/certs/
 ```
 
@@ -55,7 +55,7 @@ Elasticsearch requires strict permissions on private keys and controlled access 
 Apply file permissions:
 
 ```
-sudo chmod 600 /etc/elasticsearch/certs/elasticsearch.key
+sudo chmod 640 /etc/elasticsearch/certs/elasticsearch.key
 sudo chmod 644 /etc/elasticsearch/certs/elasticsearch.crt
 sudo chmod 644 /etc/elasticsearch/certs/ca-chain.crt
 ```
@@ -69,7 +69,7 @@ sudo chmod 750 /etc/elasticsearch/certs
 Set ownership:
 
 ```
-sudo chown -R elasticsearch:elasticsearch /etc/elasticsearch/certs/
+sudo chown -R root:elasticsearch /etc/elasticsearch/certs/
 ```
 
 Notes:

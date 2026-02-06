@@ -48,7 +48,7 @@ Workflow:
 
 ---
 
-# **4. Directory Structure (VM)**
+# **4. Prepare the intermediate CA directory (VM)**
 
 Create the Intermediate CA directory under:
 
@@ -65,15 +65,14 @@ Recommended structure:
     db/
 ```
 
-Initialize the CA database:
-
+Create and initialize
+``bash
+sudo mkdir -p /opt/pki/intermediate/{certs,crl,csr,db,private}
+sudo chmod 700 /opt/pki/intermediate/private
+sudo touch /opt/pki/intermediate/db/index.txt
+echo 1000 | sudo tee /opt/pki/intermediate/db/serial
+echo 1000 | sudo tee /opt/pki/intermediate/db/crlnumber
 ```
-touch /opt/pki/intermediate/db/index.txt
-echo 2000 > /opt/pki/intermediate/db/serial
-```
-
-This mirrors real CA layouts.
-
 ---
 
 # **5. Template Reference**
@@ -105,29 +104,35 @@ This template defines:
 ### **Step 1 — Generate the Intermediate CA private key**
 
 ```
-openssl genrsa -out private/int-ca.key 4096
+openssl genrsa -aes256 -out private/int-ca.key 4096
 ```
 
 ### **Step 2 — Generate the Intermediate CA CSR**
 
 ```
-openssl req -new \
+sudo openssl req -config int-ca-openssl.cnf \
+  -new -sha256 \
   -key private/int-ca.key \
-  -out csr/int-ca.csr \
-  -config int-ca-openssl.cnf
+  -out csr/int-ca.csr
 ```
 
 ### **Step 3 — Sign the Intermediate CA certificate using the Root CA**
 
-Run this from the **Root CA directory**:
+Run this from the **Root CA directory**: `/opt/pki/root`
+```
+cd /opt/pki/root
+```
+
+and run the following:
 
 ```
-openssl ca \
-  -config root-ca-openssl.cnf \
-  -in /opt/pki/intermediate/csr/int-ca.csr \
-  -out /opt/pki/intermediate/certs/int-ca.crt \
+sudo openssl ca -config root-ca-openssl.cnf \
   -extensions v3_intermediate_ca \
-  -batch
+  -days 1825 \
+  -notext \
+  -md sha256 \
+  -in ../intermediate/csr/int-ca.csr \
+  -out certs/int-ca.crt
 ```
 
 This creates a Root‑signed Intermediate CA certificate.

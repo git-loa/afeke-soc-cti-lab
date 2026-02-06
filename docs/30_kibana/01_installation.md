@@ -59,7 +59,7 @@ Create a dedicated directory:
 
 ```bash
 sudo mkdir -p /etc/kibana/certs
-sudo chown -R kibana:kibana /etc/kibana/certs
+sudo chown -R root:kibana /etc/kibana/certs
 ```
 
 This directory will later contain:
